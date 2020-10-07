@@ -1,7 +1,7 @@
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Default Starter`,
-    description: `Kick off your next, great Gatsby project with this default starter. This barebones starter ships with the main Gatsby configuration files you might need.`,
+    title: `Toby Keod`,
+    description: `Toby Keod is a software engineer specializing in building (and occasionally designing) exceptional websites, applications, and everything in between.`,
     author: `@gatsbyjs`,
   },
   plugins: [
