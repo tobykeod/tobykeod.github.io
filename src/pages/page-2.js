@@ -11,9 +11,9 @@ function HeadList(props) {
   });
   return (
     <tr>
-      <th></th>
+      <th>{}</th>
       {listItems}
-      <td>S</td>
+      <td>{}</td>
     </tr>
   );
 }
@@ -22,6 +22,7 @@ function NumberList(props) {
   const numbers = props.numbers;
   let sum = 0;
   const listItems = numbers.map((number, index) => {
+    number = number | 0;
     sum += number;
     return <td key={index}>{number}</td>;
   });
@@ -39,15 +40,19 @@ function SalList(props) {
   let cals = [];
   let sum = 0;
 
+  let pre_numbers = props.pre_numbers;
+  let new_numbers = pre_numbers.concat(numbers);
+
   numbers.forEach((number, index) => {
     let subsum = 0;
-    subsum += numbers[index-1] | 0;
-    subsum += numbers[index-2] | 0;
-    subsum += numbers[index-3] | 0;
-
+    subsum += new_numbers[index + pre_numbers.length - 1] | 0;
+    subsum += new_numbers[index + pre_numbers.length - 2] | 0;
+    subsum += new_numbers[index + pre_numbers.length - 3] | 0;
+    
     let average = subsum / 3;
     let prefix = 0;
-
+    
+    number = number | 0;
     if (number < 0) {
       prefix = 0;
     } else if (number < 2000) {
@@ -91,26 +96,93 @@ function SalList(props) {
   );
 }
 
-const numbers = [2000, 5000, 10000];
+export default class SecondPage extends React.Component {
+  state = {
+    numbers: [2000, 5000, 10000],
+    pre_numbers: [],
+    show_pre: false
+  }
 
-const SecondPage = () => (
-  <Layout>
-    <SEO title="Page two" />
-    <h1>Hi from the second page</h1>
-    <p>Welcome to page 2</p>
+  handleInputChange = event => {
+    const target = event.target
+    const value = target.value
+    const name = target.name
 
-    <table>
-      <thead>
-        <HeadList numbers={numbers} />
-      </thead>
-      <tbody>
-        <NumberList numbers={numbers} />
-        <SalList numbers={numbers} />
-      </tbody>
-    </table>
+    this.setState({
+      [name]: value.split(",")
+    })
+  }
 
-    <Link to="/">Go back to the homepage</Link>
-  </Layout>
-)
+  handleSubmit = event => {
+    event.preventDefault()
+    console.log(this.state.numbers);
+  }
 
-export default SecondPage
+  toggleShow = event => {
+    event.preventDefault()
+    
+    this.setState({
+      "show_pre": !this.state.show_pre
+    })
+
+    if (this.state.show_pre) {
+      event.target.innerHTML = "+"
+    } else {
+      event.target.innerHTML = "-"
+    }
+  }
+
+  render() {
+    return (
+      <Layout>
+        <SEO title="Page two" />
+        <h1>Hi from the second page</h1>
+        <p>Welcome to page 2</p>
+
+        <form onSubmit={this.handleSubmit}>
+          <div style={{ marginBottom: "15px" }}>
+            {/* Data: */}
+            <input
+              type="text"
+              name="numbers"
+              value={this.state.numbers}
+              onChange={this.handleInputChange}
+              style={{ width: "100%" }}
+            />
+          </div>
+          {/* <button type="submit">Update</button> */}
+          <a 
+            href="/#"
+            onClick={this.toggleShow}
+            style={{ textDecoration: "none", marginRight: "10px" }}
+          >
+            +
+          </a>
+          {this.state.show_pre &&
+            <label style={{ marginBottom: "10px" }}>
+              <input
+                type="text"
+                name="pre_numbers"
+                value={this.state.pre_numbers}
+                onChange={this.handleInputChange}
+                style={{ maxWidth: "200px" }}
+              />
+            </label>
+          }
+        </form>
+
+        <table style={{ marginBottom: "80px" }}>
+          <thead>
+            <HeadList numbers={this.state.numbers} />
+          </thead>
+          <tbody>
+            <NumberList numbers={this.state.numbers} />
+            <SalList numbers={this.state.numbers} pre_numbers={this.state.pre_numbers} />
+          </tbody>
+        </table>
+
+        <Link to="/">Go back to the homepage</Link>
+      </Layout>
+    );
+  }
+}
