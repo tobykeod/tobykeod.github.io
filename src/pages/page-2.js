@@ -139,7 +139,7 @@ export default class SecondPage extends React.Component {
         <h1>Hi from the second page</h1>
         <p>Welcome to page 2</p>
 
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit} style={{ marginBottom: "0" }}>
           <div style={{ marginBottom: "15px" }}>
             {/* Data: */}
             <input
@@ -165,13 +165,13 @@ export default class SecondPage extends React.Component {
                 name="pre_numbers"
                 value={this.state.pre_numbers}
                 onChange={this.handleInputChange}
-                style={{ maxWidth: "200px" }}
+                style={{ maxWidth: "200px", marginBottom: "10px" }}
               />
             </label>
           }
         </form>
 
-        <table style={{ marginBottom: "80px" }}>
+        <table style={{ marginBottom: "60px" }}>
           <thead>
             <HeadList numbers={this.state.numbers} />
           </thead>
